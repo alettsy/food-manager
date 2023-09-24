@@ -3,9 +3,6 @@ import { error, json } from '@sveltejs/kit';
 export async function GET(event: any) {
 	const method = event.params.method;
 
-	console.log('called');
-	console.log(Number.isInteger(method));
-
 	if (method === 'all') {
 		return json(expiryOptions);
 	} else {

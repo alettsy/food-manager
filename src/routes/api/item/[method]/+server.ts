@@ -62,6 +62,12 @@ async function filterItems(options: any) {
 		}
 	}
 
+	// TODO: support null (None) of date
+	// if (filters.expiry === null) {
+	// 	lte = new Date();
+	// 	gte = undefined;
+	// }
+
 	const items = await db.item.findMany({
 		select: {
 			id: true,

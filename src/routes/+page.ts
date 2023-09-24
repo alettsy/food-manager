@@ -21,22 +21,19 @@ const controls = [
 		]
 	},
 	{
-		type: 'menu-button',
-		name: 'Filter',
-		children: [
-			{
-				name: 'Test1',
-				click: {
-					type: 'event'
-				}
-			},
-			{
-				name: 'Test2',
-				click: {
-					type: 'event'
-				}
-			}
-		]
+		type: 'dropdown-loader',
+		name: 'category',
+		route: '/api/category/all'
+	},
+	{
+		type: 'dropdown-loader',
+		name: 'location',
+		route: '/api/location/all'
+	},
+	{
+		type: 'dropdown-loader',
+		name: 'expiry',
+		route: '/api/expiry/all'
 	},
 	{
 		type: 'text-input',

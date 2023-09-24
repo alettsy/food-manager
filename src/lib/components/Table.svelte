@@ -1,8 +1,8 @@
 <script lang="ts">
+    import {createEventDispatcher} from "svelte";
+
     export let headers: string[];
     export let items: object[];
-
-    $: allowed = headers.length === headers.length;
 
     function format(data: any): any {
         if (data === null) return 'None';
@@ -10,51 +10,55 @@
     }
 
     function formatExpiryColor(data: any): string {
-        const defaultStyle = "table-row ";
-
-        if (data.expiry === null) return defaultStyle + "after:bg-neutral";
+        if (data.expiry === null) return "after:bg-neutral";
 
         let week = new Date();
         week.setDate(week.getDate() + 7);
         if (new Date(data.expiry) < week) {
-            return defaultStyle + "after:bg-accent"
+            return "after:bg-accent"
         }
 
         let month = new Date();
         month.setDate(month.getDate() + 30);
         if (new Date(data.expiry) < month) {
-            return defaultStyle + "after:bg-secondary"
+            return "after:bg-secondary"
         }
 
         if (new Date(data.expiry) < new Date()) {
-            return defaultStyle + "after:bg-error"
+            return "after:bg-error"
         }
 
-        return defaultStyle + "after:bg-neutral";
+        return "after:bg-neutral";
+    }
+
+    const dispatch = createEventDispatcher();
+
+    function handleClick(item: any) {
+        dispatch('table-item-click', {
+            data: item
+        })
     }
 </script>
 
-{#if allowed}
-    <div class="overflow-x-auto">
-        <table class="table">
-            <thead>
-            <tr>
-                {#each headers as header}
-                    <th>{header}</th>
+<div class="overflow-x-auto">
+    <table class="table border-separate border-spacing-y-1">
+        <thead>
+        <tr>
+            {#each headers as header}
+                <th>{header}</th>
+            {/each}
+        </tr>
+        </thead>
+        <tbody>
+        {#each items as item}
+            <tr class={formatExpiryColor(item)} on:click={() => handleClick(item)}>
+                {#each Object.entries(item) as [key, value]}
+                    {#if key !== 'id'}
+                        <td class="p-5">{format(value)}</td>
+                    {/if}
                 {/each}
             </tr>
-            </thead>
-            <tbody>
-            {#each items as item}
-                <tr class={formatExpiryColor(item)}>
-                    {#each Object.entries(item) as [key, value]}
-                        {#if key !== 'id'}
-                            <td class="p-5">{format(value)}</td>
-                        {/if}
-                    {/each}
-                </tr>
-            {/each}
-            </tbody>
-        </table>
-    </div>
-{/if}
+        {/each}
+        </tbody>
+    </table>
+</div>

@@ -2,22 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-.table-row {
+thead > tr:hover {
+    color: white;
+}
+
+tr {
     position: relative;
     background-color: transparent;
+    @apply border-base-100;
+    font-size: 12pt;
 }
 
-.table-row:hover {
+tr:hover {
     color: black;
+    cursor: pointer;
 }
 
-.table-row:after {
+tr:after {
     position: absolute;
     inset: 0;
     z-index: -1;
     border-radius: 0.5rem;
 }
 
-.table-row:after:hover {
+tr:after:hover {
     @apply bg-primary
 }
