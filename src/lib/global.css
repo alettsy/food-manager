@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.table-row {
+    position: relative;
+    background-color: transparent;
+}
+
+.table-row:hover {
+    color: black;
+}
+
+.table-row:after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 0.5rem;
+}
+
+.table-row:after:hover {
+    @apply bg-primary
+}
