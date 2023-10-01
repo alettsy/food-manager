@@ -7,7 +7,7 @@
 ## Setup
 
 To initialize the database, run:
-`npx prisma migrate dev --name init`
+`npm run init-db`
 
 To view a development preview, run `npm run dev`
 
