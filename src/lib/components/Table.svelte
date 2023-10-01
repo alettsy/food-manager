@@ -34,7 +34,7 @@
     const dispatch = createEventDispatcher();
 
     function handleClick(item: any) {
-        dispatch('table-item-click', {
+        dispatch('itemClicked', {
             data: item
         })
     }

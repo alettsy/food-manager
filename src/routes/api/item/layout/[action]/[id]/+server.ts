@@ -1,9 +1,8 @@
 import db from '$lib/database';
 import { error, json } from '@sveltejs/kit';
-import { updated } from '$app/stores';
 
 const layout = {
-	title: 'Item',
+	title: 'Edit Item',
 	action: 'Edit',
 	children: [
 		{
@@ -22,30 +21,32 @@ const layout = {
 		},
 		{
 			type: 'categoryID',
+			route: '/api/category/all',
 			title: 'Category',
-			valueType: 'number',
-			value: 0,
+			valueType: 'dropdown',
+			value: 'undefined',
 			css: ''
 		},
 		{
 			type: 'locationID',
-			title: 'location',
-			valueType: 'number',
-			value: 0,
+			route: '/api/location/all',
+			title: 'Location',
+			valueType: 'dropdown',
+			value: 'undefined',
 			css: ''
 		},
 		{
 			type: 'count',
-			title: 'count',
+			title: 'Count',
 			valueType: 'number',
 			value: 0,
 			css: ''
 		},
 		{
 			type: 'expiry',
-			title: 'expiry',
+			title: 'Expiry',
 			valueType: 'date',
-			value: 0,
+			value: '',
 			css: ''
 		}
 	]
@@ -60,7 +61,7 @@ export async function GET(event: any) {
 	try {
 		const id = parseInt(stringId);
 
-		const result = await db.item.findFirst({
+		const result: any = await db.item.findFirst({
 			where: {
 				id: id
 			}

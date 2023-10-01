@@ -1,44 +1,51 @@
-import db from '$lib/database';
 import { error, json } from '@sveltejs/kit';
 
 const layout = {
-	title: 'Item',
+	title: 'New Item',
 	action: 'New',
 	children: [
 		{
 			type: 'id',
+			title: '',
 			valueType: 'number',
 			value: 0,
 			css: 'hidden'
 		},
 		{
 			type: 'name',
+			title: 'Name',
 			valueType: 'string',
 			value: '',
 			css: ''
 		},
 		{
-			type: 'category',
-			valueType: 'number',
-			value: 0,
+			type: 'categoryID',
+			route: '/api/category/all',
+			title: 'Category',
+			valueType: 'dropdown',
+			value: 'undefined',
 			css: ''
 		},
 		{
-			type: 'location',
-			valueType: 'number',
-			value: 0,
+			type: 'locationID',
+			route: '/api/location/all',
+			title: 'Location',
+			valueType: 'dropdown',
+			value: 'undefined',
 			css: ''
 		},
 		{
 			type: 'count',
+			title: 'Count',
 			valueType: 'number',
 			value: 0,
 			css: ''
 		},
 		{
 			type: 'expiry',
+			title: 'Expiry',
 			valueType: 'date',
-			value: 0,
+			value: '',
 			css: ''
 		}
 	]

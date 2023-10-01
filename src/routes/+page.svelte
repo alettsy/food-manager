@@ -54,22 +54,24 @@
     let type = 'item';
     let showModal = false;
 
-    function actionChosen(a: any) {
-        // // TODO: add action (prefix) depending on edit/new
-        // let index: string = action.detail.data;
-        // if (data.layouts[index] === undefined) return;
-        // content = data.layouts[index];
-        // document.getElementById('my_modal')?.showModal();
+    function newAction(a: any) {
         action = 'new';
         id = null;
+        type = a.detail.data;
+        showModal = true;
+    }
+
+    function editItem(a: any) {
+        action = 'edit';
+        id = a.detail.data.id;
         type = 'item';
         showModal = true;
     }
 </script>
 
 <div class="main mx-5">
-    <Modal bind:showModal {id} {action} {type} />
-    <ActionButton options={data.actions} on:action={actionChosen} />
+    <Modal {action} bind:showModal {id} {type}/>
+    <ActionButton on:action={newAction} options={data.actions}/>
     <ControlBar controls={data.controls}/>
     {#await items}
         <p>Loading</p>
@@ -77,7 +79,7 @@
         {#if json.length === 0}
             <p>No items</p>
         {:else}
-            <Table headers={data.headers} items={json}/>
+            <Table headers={data.headers} items={json} on:itemClicked={editItem}/>
         {/if}
     {/await}
 </div>
