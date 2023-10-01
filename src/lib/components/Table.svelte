@@ -12,6 +12,10 @@
     function formatExpiryColor(data: any): string {
         if (data.expiry === null) return "after:bg-neutral";
 
+        if (new Date(data.expiry) < new Date()) {
+            return "after:bg-error"
+        }
+
         let week = new Date();
         week.setDate(week.getDate() + 7);
         if (new Date(data.expiry) < week) {
@@ -22,10 +26,6 @@
         month.setDate(month.getDate() + 30);
         if (new Date(data.expiry) < month) {
             return "after:bg-secondary"
-        }
-
-        if (new Date(data.expiry) < new Date()) {
-            return "after:bg-error"
         }
 
         return "after:bg-neutral";

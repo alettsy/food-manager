@@ -1,4 +1,18 @@
 const headers = ['Name', 'Category', 'Location', 'Count', 'Expiry'];
+const actions = [
+	{
+		name: 'Add item',
+		action: 'item'
+	},
+	{
+		name: 'Add category',
+		action: 'category'
+	},
+	{
+		name: 'Add location',
+		action: 'location'
+	}
+];
 const controls = [
 	{
 		type: 'menu-button',
@@ -40,7 +54,12 @@ const controls = [
 		css: 'ml-auto'
 	}
 ];
+const layouts: object = {
+	item: [],
+	category: [],
+	location: []
+};
 
 export async function load() {
-	return { headers, controls };
+	return { headers, controls, actions, layouts };
 }

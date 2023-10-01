@@ -3,6 +3,8 @@
     import Table from "$lib/components/Table.svelte";
     import {filters} from "$lib/store";
     import {onMount} from "svelte";
+    import ActionButton from "$lib/components/ActionButton.svelte";
+    import Modal from "$lib/components/Modal.svelte";
 
     export let data;
 
@@ -46,9 +48,20 @@
         const json = await r.json();
         if (json !== items) items = json;
     }
+
+    let content: object[] = [];
+
+    function actionChosen(action: any) {
+        let index: string = action.detail.data;
+        if (data.layouts[index] === undefined) return;
+        content = data.layouts[index];
+        document.getElementById('my_modal')?.showModal();
+    }
 </script>
 
-<div class="mx-5">
+<div class="main mx-5">
+    <Modal {content} />
+    <ActionButton options={data.actions} on:action={actionChosen} />
     <ControlBar controls={data.controls}/>
     {#await items}
         <p>Loading</p>
@@ -60,3 +73,15 @@
         {/if}
     {/await}
 </div>
+
+<style>
+    .main {
+        visibility: hidden;
+    }
+
+    @media only screen and (min-width: 480px) {
+        .main {
+            visibility: visible;
+        }
+    }
+</style>

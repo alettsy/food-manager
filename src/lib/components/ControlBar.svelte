@@ -27,16 +27,16 @@
     }
 </script>
 
-<div class="control-bar flex flex-row m-2">
+<div class="control-bar flex flex-row m-2 items-center justify-left space-x-1">
     {#each controls as control}
         {#if control.type === 'text-input'}
             <input type="text" class={"input input-bordered input-primary max-w-xs " + control.css}
-                   placeholder="Type to search"/>
+                   placeholder="Type to search" style="margin-left: auto !important;"/>
         {:else if control.type === 'menu-button'}
             <MenuButton title={control.name ?? ''} children={control.children ?? []}/>
         {:else if control.type === 'dropdown-loader'}
             <Filter name={control.name ?? ''} on:change={dropdownChange} route={control.route ?? ''}
-                    selected={getSelected(control.name ?? '')}/>
+                    selected={getSelected(control.name ?? '')} />
         {/if}
     {/each}
 </div>
