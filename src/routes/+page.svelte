@@ -5,6 +5,7 @@
     import {onMount} from "svelte";
     import ActionButton from "$lib/components/ActionButton.svelte";
     import Modal from "$lib/components/Modal.svelte";
+    import Toast from "$lib/components/Toast.svelte";
 
     export let data;
 
@@ -78,10 +79,22 @@
         filterOptions.sort.property = data.detail.data.sortBy;
         getItems();
     }
+
+    let toastText = 'test';
+    let toastColor = 'info';
+    let toastTime = 3000;
+    let showToast = false;
+
+    function displayToast(data: any) {
+        toastText = data.detail.data.text;
+        toastColor = data.detail.data.color;
+        showToast = true;
+    }
 </script>
 
 <div class="main mx-5">
-    <Modal {action} bind:showModal {id} {type}/>
+    <Toast bind:showToast color={toastColor} text={toastText} time={toastTime}/>
+    <Modal {action} bind:showModal {id} on:showToast={displayToast} {type}/>
     <ActionButton on:action={newAction} options={data.actions}/>
     <ControlBar controls={data.controls} on:searchChanged={updateSearch}/>
     {#await items}
@@ -91,7 +104,8 @@
             <p>No items</p>
         {:else}
             <Table sortBy={filterOptions.sort.property} order={filterOptions.sort.order} type="item"
-                   headers={data.headers} items={json} on:itemClicked={editItem} on:orderChanged={updateOrder}/>
+                   headers={data.headers} items={json} on:itemClicked={editItem} on:orderChanged={updateOrder}
+                   on:showToast={displayToast}/>
         {/if}
     {/await}
 </div>

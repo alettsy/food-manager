@@ -1,5 +1,6 @@
 <script lang="ts">
     import Filter from "$lib/components/Filter.svelte";
+    import {createEventDispatcher} from "svelte";
 
     export let id: number | null;
     export let action: string;
@@ -26,13 +27,20 @@
         child.value = event.target.value;
     }
 
+    const dispatch = createEventDispatcher();
+
     async function submit() {
         // TODO: validate number input + toasts instead of alerts + date selector + number restriction
         const r = await items;
         const name = r.children.find((v: any) => v.type === 'name');
 
         if (name.value === '') {
-            alert('Name is required');
+            dispatch('showToast', {
+                data: {
+                    color: 'error',
+                    text: 'Name is required'
+                }
+            });
         } else {
             requesting = true;
             let payload: any = {};
@@ -45,7 +53,13 @@
                 body: JSON.stringify(payload)
             })
             const j = response.json();
-            alert(j);
+            let text = action === 'new' ? ' was added' : ' was updated';
+            dispatch('showToast', {
+                data: {
+                    color: 'success',
+                    text: type + text
+                }
+            });
             requesting = false;
         }
     }

@@ -49,7 +49,13 @@
                 method: 'POST',
                 body: JSON.stringify({id: item.id})
             });
-            alert('Deleted ' + item.name);
+
+            dispatch('showToast', {
+                data: {
+                    text: 'Deleted ' + item.name,
+                    color: 'success'
+                }
+            })
         }
     }
 
