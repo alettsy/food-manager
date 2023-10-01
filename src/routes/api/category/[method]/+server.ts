@@ -31,7 +31,7 @@ export async function POST(event: any) {
 	switch (method) {
 		case 'new':
 			return newCategory(options);
-		case 'update':
+		case 'edit':
 			return updateCategory(options.id, options.properties);
 		case 'delete':
 			return deleteCategory(options.id);

@@ -8,11 +8,10 @@
 
     let dialog: any;
     let items: any;
+    let requesting = false;
     $: if (dialog && showModal) items = update();
 
     async function update() {
-        console.log('update');
-        // TODO: re-fetch layout and display
         let path = '/api/' + type + '/layout/' + action + (id === null ? '' : '/' + id);
         dialog.showModal()
         const r = await fetch(path);
@@ -27,11 +26,28 @@
         child.value = event.target.value;
     }
 
-    function submit() {
-        console.log('Submit pressed');
-        console.log(items)
-        // TODO: validate
-        // TODO: submit with action + update button to indicator and show toast on complete
+    async function submit() {
+        // TODO: validate number input + toasts instead of alerts + date selector + number restriction
+        const r = await items;
+        const name = r.children.find((v: any) => v.type === 'name');
+
+        if (name.value === '') {
+            alert('Name is required');
+        } else {
+            requesting = true;
+            let payload: any = {};
+            for (let child of r.children) {
+                payload[child.type] = child.value;
+            }
+
+            const response = await fetch('/api/' + type + '/' + action, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            const j = response.json();
+            alert(j);
+            requesting = false;
+        }
     }
 </script>
 
@@ -56,14 +72,20 @@
                                 {:else}
                                     <input type="text"
                                            class={"input input-bordered input-primary max-w-xs " + child.css}
-                                           placeholder="" on:input={(e) => textChanged(e, child)}/>
+                                           placeholder="" value={child.value} on:input={(e) => textChanged(e, child)}/>
                                 {/if}
                             </div>
                         {/if}
                     {/each}
                 </div>
                 <div class="flex justify-end">
-                    <button class="btn btn-primary ml-auto" on:click={submit}>Submit</button>
+                    {#if requesting}
+                        <button class="btn btn-primary">
+                            <span class="loading loading-spinner"></span>
+                        </button>
+                    {:else}
+                        <button class="btn btn-primary" on:click={submit}>Submit</button>
+                    {/if}
                 </div>
             {:catch e}
                 <p>Error</p>

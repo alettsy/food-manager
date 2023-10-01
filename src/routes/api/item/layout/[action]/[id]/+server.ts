@@ -39,7 +39,7 @@ const layout = {
 			type: 'count',
 			title: 'Count',
 			valueType: 'number',
-			value: 0,
+			value: 1,
 			css: ''
 		},
 		{
@@ -73,6 +73,8 @@ export async function GET(event: any) {
 		for (let child of updatedLayout.children) {
 			child.value = result[child.type];
 		}
+
+		console.log(updatedLayout);
 
 		return json(updatedLayout);
 	} catch {

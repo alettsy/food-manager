@@ -38,7 +38,7 @@ const layout = {
 			type: 'count',
 			title: 'Count',
 			valueType: 'number',
-			value: 0,
+			value: 1,
 			css: ''
 		},
 		{

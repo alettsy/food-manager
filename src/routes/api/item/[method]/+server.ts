@@ -30,7 +30,7 @@ export async function POST(event: any) {
 			return deleteItem(options.id);
 		case 'filter':
 			return filterItems(options);
-		case 'update':
+		case 'edit':
 			return updateItem(options.id, options.properties);
 		default:
 			throw error(404, 'Not Found');
@@ -149,7 +149,7 @@ async function makeNewItem(item: any) {
 			name: item.name,
 			categoryID: item.expiry?.id,
 			locationID: item.location?.id,
-			count: count,
+			count: count > 1 ? count : 1,
 			expiry: expiry
 		}
 	});

@@ -31,7 +31,7 @@ export async function POST(event: any) {
 	switch (method) {
 		case 'new':
 			return newLocation(options);
-		case 'update':
+		case 'edit':
 			return updateLocation(options.id, options.properties);
 		case 'delete':
 			return deleteLocation(options.id);

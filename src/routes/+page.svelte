@@ -79,7 +79,7 @@
         {#if json.length === 0}
             <p>No items</p>
         {:else}
-            <Table headers={data.headers} items={json} on:itemClicked={editItem}/>
+            <Table type="item" headers={data.headers} items={json} on:itemClicked={editItem}/>
         {/if}
     {/await}
 </div>
