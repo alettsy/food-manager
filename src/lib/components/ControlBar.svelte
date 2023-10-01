@@ -31,7 +31,7 @@
     {#each controls as control}
         {#if control.type === 'text-input'}
             <input type="text" class={"input input-bordered input-primary max-w-xs " + control.css}
-                   placeholder="Type to search" style="margin-left: auto !important;"/>
+                   placeholder="Type to search" />
         {:else if control.type === 'menu-button'}
             <MenuButton title={control.name ?? ''} children={control.children ?? []}/>
         {:else if control.type === 'dropdown-loader'}

@@ -51,13 +51,19 @@ const controls = [
 	},
 	{
 		type: 'text-input',
-		css: 'ml-auto'
+		css: '!ml-auto'
 	}
 ];
 const layouts: object = {
-	item: [],
-	category: [],
-	location: []
+	item: {
+		name: 'aaa'
+	},
+	category: {
+		name: 'bbb'
+	},
+	location: {
+		name: 'ccc'
+	}
 };
 
 export async function load() {

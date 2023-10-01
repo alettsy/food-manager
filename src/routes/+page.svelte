@@ -49,9 +49,10 @@
         if (json !== items) items = json;
     }
 
-    let content: object[] = [];
+    let content = {};
 
     function actionChosen(action: any) {
+        // TODO: add action (prefix) depending on edit/new
         let index: string = action.detail.data;
         if (data.layouts[index] === undefined) return;
         content = data.layouts[index];
