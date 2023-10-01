@@ -72,6 +72,12 @@
         filterOptions.search = data.detail.data;
         getItems();
     }
+
+    function updateOrder(data: any) {
+        filterOptions.sort.order = data.detail.data.order;
+        filterOptions.sort.property = data.detail.data.sortBy;
+        getItems();
+    }
 </script>
 
 <div class="main mx-5">
@@ -84,7 +90,8 @@
         {#if json.length === 0}
             <p>No items</p>
         {:else}
-            <Table type="item" headers={data.headers} items={json} on:itemClicked={editItem}/>
+            <Table sortBy={filterOptions.sort.property} order={filterOptions.sort.order} type="item"
+                   headers={data.headers} items={json} on:itemClicked={editItem} on:orderChanged={updateOrder}/>
         {/if}
     {/await}
 </div>

@@ -39,6 +39,11 @@ export async function POST(event: any) {
 
 async function filterItems(options: any) {
 	const sorting: any = {};
+
+	if (options.sort.property.includes('location') || options.sort.property.includes('category')) {
+		options.sort.property += 'ID';
+	}
+
 	sorting[options.sort.property] = options.sort.order;
 
 	const search = options.search;
