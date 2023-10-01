@@ -67,12 +67,17 @@
         type = 'item';
         showModal = true;
     }
+
+    function updateSearch(data: any) {
+        filterOptions.search = data.detail.data;
+        getItems();
+    }
 </script>
 
 <div class="main mx-5">
     <Modal {action} bind:showModal {id} {type}/>
     <ActionButton on:action={newAction} options={data.actions}/>
-    <ControlBar controls={data.controls}/>
+    <ControlBar controls={data.controls} on:searchChanged={updateSearch}/>
     {#await items}
         <p>Loading</p>
     {:then json}
