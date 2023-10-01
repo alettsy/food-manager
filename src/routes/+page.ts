@@ -54,18 +54,7 @@ const controls = [
 		css: '!ml-auto'
 	}
 ];
-const layouts: object = {
-	item: {
-		name: 'aaa'
-	},
-	category: {
-		name: 'bbb'
-	},
-	location: {
-		name: 'ccc'
-	}
-};
 
 export async function load() {
-	return { headers, controls, actions, layouts };
+	return { headers, controls, actions };
 }

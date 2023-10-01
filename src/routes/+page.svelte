@@ -49,19 +49,26 @@
         if (json !== items) items = json;
     }
 
-    let content = {};
+    let action = 'new';
+    let id: number | null = null;
+    let type = 'item';
+    let showModal = false;
 
-    function actionChosen(action: any) {
-        // TODO: add action (prefix) depending on edit/new
-        let index: string = action.detail.data;
-        if (data.layouts[index] === undefined) return;
-        content = data.layouts[index];
-        document.getElementById('my_modal')?.showModal();
+    function actionChosen(a: any) {
+        // // TODO: add action (prefix) depending on edit/new
+        // let index: string = action.detail.data;
+        // if (data.layouts[index] === undefined) return;
+        // content = data.layouts[index];
+        // document.getElementById('my_modal')?.showModal();
+        action = 'new';
+        id = null;
+        type = 'item';
+        showModal = true;
     }
 </script>
 
 <div class="main mx-5">
-    <Modal {content} />
+    <Modal bind:showModal {id} {action} {type} />
     <ActionButton options={data.actions} on:action={actionChosen} />
     <ControlBar controls={data.controls}/>
     {#await items}
