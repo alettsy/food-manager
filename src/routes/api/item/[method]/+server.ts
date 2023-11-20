@@ -1,5 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import db from '$lib/database';
+import { formatDate } from '$lib/utils';
 
 export async function GET(event: any) {
 	const method = event.params.method;
@@ -31,7 +32,8 @@ export async function POST(event: any) {
 		case 'filter':
 			return filterItems(options);
 		case 'edit':
-			return updateItem(options.id, options.properties);
+			options.expiry = options.expiry === '' ? null : new Date(options.expiry);
+			return updateItem(options.id, options);
 		default:
 			throw error(404, 'Not Found');
 	}
@@ -66,12 +68,6 @@ async function filterItems(options: any) {
 			gte = new Date();
 		}
 	}
-
-	// TODO: support null (None) of date
-	// if (filters.expiry === null) {
-	// 	lte = new Date();
-	// 	gte = undefined;
-	// }
 
 	const items = await db.item.findMany({
 		select: {
@@ -117,11 +113,64 @@ async function filterItems(options: any) {
 	for (let item of items) {
 		if (item.expiry !== null && item.expiry !== undefined) {
 			// @ts-ignore TODO!
-			item.expiry = item.expiry.toISOString().split('T')[0];
+			item.expiry = formatDate(item.expiry);
 		}
 	}
 
+	items.sort(function (a: any, b: any) {
+		return sortItems(a, b, options.sort.property, options.sort.order);
+	});
+
+	if (filters.expiry === null) {
+		const result = items.filter((v: any) => v.expiry === null);
+		return json(result);
+	}
+
 	return json(items);
+}
+
+function sortItems(a: any, b: any, property: string, order: string) {
+	if (order === 'asc') {
+		if (property === 'categoryID') {
+			return sortHelper(a, b, 'category', true);
+		} else if (property === 'locationID') {
+			return sortHelper(a, b, 'location', true);
+		} else if (property === 'expiry') {
+			return sortHelper(a, b, 'expiry', true);
+		}
+		return a[property].toString().localeCompare(b[property].toString());
+	} else {
+		if (property === 'categoryID') {
+			return sortHelper(a, b, 'category', false);
+		} else if (property === 'locationID') {
+			return sortHelper(a, b, 'location', false);
+		} else if (property === 'expiry') {
+			return sortHelper(a, b, 'expiry', false);
+		}
+		return b[property].toString().localeCompare(a[property].toString());
+	}
+}
+
+function sortHelper(a: any, b: any, type: any, asc: any) {
+	if (type === 'expiry') {
+		const dateA = a[type] ?? 'null';
+		const dateB = b[type] ?? 'null';
+
+		if (asc) {
+			return dateA.localeCompare(dateB);
+		}
+
+		return dateB.localeCompare(dateA);
+	} else {
+		const aValue = a[type] === null ? 'null' : a[type]['name'];
+		const bValue = b[type] === null ? 'null' : b[type]['name'];
+
+		if (asc) {
+			return aValue.localeCompare(bValue);
+		}
+
+		return bValue.localeCompare(aValue);
+	}
 }
 
 async function updateItem(id: number, properties: any) {
@@ -147,7 +196,7 @@ async function deleteItem(id: number) {
 
 async function makeNewItem(item: any) {
 	const count = parseInt(item.count);
-	const expiry = new Date(item.expiry).toISOString();
+	const expiry = item.expiry === '' ? null : new Date(item.expiry).toISOString();
 
 	const created = await db.item.create({
 		data: {

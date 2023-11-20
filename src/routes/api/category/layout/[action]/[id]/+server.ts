@@ -51,8 +51,6 @@ export async function GET(event: any) {
 			child.value = result[child.type];
 		}
 
-		console.log(updatedLayout);
-
 		return json(updatedLayout);
 	} catch {
 		throw error(404, 'Not Found');

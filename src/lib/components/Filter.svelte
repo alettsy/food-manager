@@ -26,7 +26,7 @@
 </script>
 
 {#await getOptions()}
-    <p>Loading</p>
+    <span class='loading loading-spinner loading-md text-primary'></span>
 {:then json}
     <select bind:value={selectedValue} class="select select-secondary max-w-xs" on:change={itemChanged}>
         <option value={'undefined'}>Any {name}</option>

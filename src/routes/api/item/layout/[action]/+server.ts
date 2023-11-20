@@ -1,4 +1,5 @@
 import { error, json } from '@sveltejs/kit';
+import { formatDate } from '$lib/utils';
 
 const layout = {
 	title: 'New Item',
@@ -45,7 +46,7 @@ const layout = {
 			type: 'expiry',
 			title: 'Expiry',
 			valueType: 'date',
-			value: '',
+			value: formatDate(new Date(), 1),
 			css: ''
 		}
 	]

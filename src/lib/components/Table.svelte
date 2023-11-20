@@ -1,5 +1,6 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
+    import toaster from "$lib/toaster";
 
     export let type: string;
     export let headers: string[];
@@ -50,12 +51,8 @@
                 body: JSON.stringify({id: item.id})
             });
 
-            dispatch('showToast', {
-                data: {
-                    text: 'Deleted ' + item.name,
-                    color: 'success'
-                }
-            })
+            toaster.success('Deleted ' + item.name);
+            dispatch('refresh');
         }
     }
 
@@ -76,7 +73,7 @@
     }
 </script>
 
-<div class="overflow-x-auto">
+<div class="main-table overflow-x-auto overflow-y-scroll">
     <table class="table border-separate border-spacing-y-1">
         <thead>
         <tr>
@@ -133,3 +130,9 @@
         </tbody>
     </table>
 </div>
+
+<style>
+    .main-table {
+        height: calc(100% - 64px);
+    }
+</style>

@@ -34,7 +34,7 @@
             </g>
         </svg>
     </label>
-    <ul class="dropdown-content z-[1] menu p-2 shadow bg-primary rounded-box w-52 text-black" tabindex="0">
+    <ul class="dropdown-content z-[1] menu p-2 shadow bg-primary rounded-box w-52 text-black text-lg" tabindex="0">
         {#each options as child}
             <li><a class="hover:bg-secondary hover:text-black" on:click={clicked(child.action)}>{child.name}</a></li>
         {/each}

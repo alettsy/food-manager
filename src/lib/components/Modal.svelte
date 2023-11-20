@@ -1,6 +1,8 @@
 <script lang="ts">
     import Filter from "$lib/components/Filter.svelte";
     import {createEventDispatcher} from "svelte";
+    import toaster from '../toaster';
+    import {formatDate} from "$lib/utils";
 
     export let id: number | null;
     export let action: string;
@@ -16,7 +18,9 @@
         let path = '/api/' + type + '/layout/' + action + (id === null ? '' : '/' + id);
         dialog.showModal()
         const r = await fetch(path);
-        return r.json();
+        const x = await r.json();
+        console.log(x);
+        return x;
     }
 
     function dropdownChanged(payload: any, child: any) {
@@ -24,6 +28,10 @@
     }
 
     function textChanged(event: any, child: any) {
+        child.value = event.target.value;
+    }
+
+    function dateChanged(event: any, child: any) {
         child.value = event.target.value;
     }
 
@@ -35,12 +43,7 @@
         const name = r.children.find((v: any) => v.type === 'name');
 
         if (name.value === '') {
-            dispatch('showToast', {
-                data: {
-                    color: 'error',
-                    text: 'Name is required'
-                }
-            });
+            toaster.error('Name is required');
         } else {
             requesting = true;
             let payload: any = {};
@@ -54,13 +57,10 @@
             })
             const j = response.json();
             let text = action === 'new' ? ' was added' : ' was updated';
-            dispatch('showToast', {
-                data: {
-                    color: 'success',
-                    text: type + text
-                }
-            });
+            toaster.success(type + text);
             requesting = false;
+            dispatch('close');
+            dialog.close();
         }
     }
 </script>
@@ -78,11 +78,15 @@
                 <div class="flex flex-col space-y-1">
                     {#each json.children as child}
                         {#if child.type !== 'id'}
-                            <div>
-                                <h3>{child.title}</h3>
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">{child.title}</span>
+                                </label>
                                 {#if child.valueType === 'dropdown'}
                                     <Filter name={child.title} route={child.route} selected={child.value}
                                             on:change={(e) => dropdownChanged(e, child)}/>
+                                    {:else if child.valueType === 'date'}
+                                    <input on:change={(e) => dateChanged(e, child)} value={child.value} type="date" min={formatDate(new Date(), 1)} class="input input-bordered input-primary max-w-xs" pattern="\d{4}-\d{2}-\d{2}" />
                                 {:else}
                                     <input type="text"
                                            class={"input input-bordered input-primary max-w-xs " + child.css}
@@ -101,7 +105,7 @@
                         <button class="btn btn-primary" on:click={submit}>Submit</button>
                     {/if}
                 </div>
-            {:catch e}
+            {:catch _}
                 <p>Error</p>
             {/await}
         {/if}

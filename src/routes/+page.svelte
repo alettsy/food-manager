@@ -1,11 +1,10 @@
-<script lang="ts">
-    import ControlBar from "$lib/components/ControlBar.svelte";
-    import Table from "$lib/components/Table.svelte";
-    import {filters} from "$lib/store";
-    import {onMount} from "svelte";
-    import ActionButton from "$lib/components/ActionButton.svelte";
-    import Modal from "$lib/components/Modal.svelte";
-    import Toast from "$lib/components/Toast.svelte";
+<script lang='ts'>
+    import ControlBar from '$lib/components/ControlBar.svelte';
+    import Table from '$lib/components/Table.svelte';
+    import { filters } from '$lib/store';
+    import { onMount } from 'svelte';
+    import ActionButton from '$lib/components/ActionButton.svelte';
+    import Modal from '$lib/components/Modal.svelte';
 
     export let data;
 
@@ -20,10 +19,10 @@
             location: undefined,
             category: undefined
         }
-    }
+    };
 
     $: filterStore = $filters;
-    let items: any = [];
+    let items: any = new Promise((r: any, _) => setTimeout(r([]), 5000));
 
     onMount(() => {
         const interval = setInterval(getItems, 3000);
@@ -36,8 +35,8 @@
         return () => {
             clearInterval(interval);
             unsub();
-        }
-    })
+        };
+    });
 
     async function getItems() {
         filterOptions.filters = filterStore;
@@ -45,7 +44,7 @@
         const r = await fetch('/api/item/filter', {
             method: 'POST',
             body: JSON.stringify(filterOptions)
-        })
+        });
         const json = await r.json();
         if (json !== items) items = json;
     }
@@ -80,32 +79,26 @@
         getItems();
     }
 
-    let toastText = 'test';
-    let toastColor = 'info';
-    let toastTime = 3000;
-    let showToast = false;
-
-    function displayToast(data: any) {
-        toastText = data.detail.data.text;
-        toastColor = data.detail.data.color;
-        showToast = true;
+    function refresh() {
+        getItems();
     }
+
+    // TODO: on phones, display list of item names and search bar, nothing else.
+
 </script>
 
-<div class="main mx-5">
-    <Toast bind:showToast color={toastColor} text={toastText} time={toastTime}/>
-    <Modal {action} bind:showModal {id} on:showToast={displayToast} {type}/>
-    <ActionButton on:action={newAction} options={data.actions}/>
-    <ControlBar controls={data.controls} on:searchChanged={updateSearch}/>
+<div class='main mx-5 text-center'>
+    <Modal {action} bind:showModal {id} {type} on:close={refresh} />
+    <ActionButton on:action={newAction} options={data.actions} />
+    <ControlBar controls={data.controls} on:searchChanged={updateSearch} />
     {#await items}
-        <p>Loading</p>
+        <span class='loading loading-spinner loading-lg text-primary'></span>
     {:then json}
         {#if json.length === 0}
             <p>No items</p>
         {:else}
-            <Table sortBy={filterOptions.sort.property} order={filterOptions.sort.order} type="item"
-                   headers={data.headers} items={json} on:itemClicked={editItem} on:orderChanged={updateOrder}
-                   on:showToast={displayToast}/>
+            <Table sortBy={filterOptions.sort.property} order={filterOptions.sort.order} type='item'
+                   headers={data.headers} items={json} on:itemClicked={editItem} on:orderChanged={updateOrder} on:refresh={refresh} />
         {/if}
     {/await}
 </div>
@@ -113,6 +106,7 @@
 <style>
     .main {
         visibility: hidden;
+        height: 100%;
     }
 
     @media only screen and (min-width: 480px) {

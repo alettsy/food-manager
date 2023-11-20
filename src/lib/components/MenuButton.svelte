@@ -29,7 +29,7 @@
             <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/>
         </svg>
     </label>
-    <ul class="dropdown-content z-[1] menu p-2 shadow bg-primary rounded-box w-52 text-black" tabindex="0">
+    <ul class="dropdown-content z-[1] menu p-2 shadow bg-primary rounded-box w-52 text-black text-lg" tabindex="0">
         {#each children as child}
             <li><a class="hover:bg-secondary hover:text-black" on:click={clicked(child)}>{child.name}</a></li>
         {/each}

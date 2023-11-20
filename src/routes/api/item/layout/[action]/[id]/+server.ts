@@ -1,5 +1,6 @@
 import db from '$lib/database';
 import { error, json } from '@sveltejs/kit';
+import { formatDate } from '$lib/utils';
 
 const layout = {
 	title: 'Edit Item',
@@ -71,10 +72,12 @@ export async function GET(event: any) {
 
 		let updatedLayout = layout;
 		for (let child of updatedLayout.children) {
-			child.value = result[child.type];
+			if (child.type === 'expiry') {
+				child.value = formatDate(result[child.type]);
+			} else {
+				child.value = result[child.type];
+			}
 		}
-
-		console.log(updatedLayout);
 
 		return json(updatedLayout);
 	} catch {
