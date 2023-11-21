@@ -5,19 +5,19 @@ import { formatDate } from '$lib/utils';
 export async function GET(event: any) {
 	const method = event.params.method;
 
-	try {
-		const id = parseInt(method);
+	const id = parseInt(method);
 
-		const result = await db.item.findFirst({
-			where: {
-				id: id
-			}
-		});
+	if (isNaN(id)) throw error(400, { message: 'Invalid ID' });
 
-		return json(result);
-	} catch {
-		throw error(404, 'Not Found');
-	}
+	const result = await db.item.findFirst({
+		where: {
+			id: id
+		}
+	});
+
+	if (result === null) throw error(500, { message: 'Failed to get item' });
+
+	return json(result);
 }
 
 export async function POST(event: any) {
@@ -35,7 +35,7 @@ export async function POST(event: any) {
 			options.expiry = options.expiry === '' ? null : new Date(options.expiry);
 			return updateItem(options.id, options);
 		default:
-			throw error(404, 'Not Found');
+			throw error(404, 'Unknown method');
 	}
 }
 
@@ -110,6 +110,8 @@ async function filterItems(options: any) {
 		orderBy: sorting
 	});
 
+	if (items === null) throw error(500, { message: 'Failed to get filtered items' });
+
 	for (let item of items) {
 		if (item.expiry !== null && item.expiry !== undefined) {
 			// @ts-ignore TODO!
@@ -174,12 +176,18 @@ function sortHelper(a: any, b: any, type: any, asc: any) {
 }
 
 async function updateItem(id: number, properties: any) {
+	if (properties['count'] !== undefined) {
+		properties['count'] = parseInt(properties['count']);
+	}
+
 	const updated = await db.item.update({
 		where: {
 			id: id
 		},
 		data: properties
 	});
+
+	if (updated === null) throw error(500, { message: 'Failed to update item' });
 
 	return json(updated);
 }
@@ -191,11 +199,16 @@ async function deleteItem(id: number) {
 		}
 	});
 
+	if (deleted === null) throw error(500, { message: 'Failed to delete item' });
+
 	return json(deleted);
 }
 
 async function makeNewItem(item: any) {
-	const count = parseInt(item.count);
+	let count = parseInt(item.count);
+
+	if (isNaN(count)) count = 1;
+
 	const expiry = item.expiry === '' ? null : new Date(item.expiry).toISOString();
 
 	const created = await db.item.create({
@@ -207,6 +220,8 @@ async function makeNewItem(item: any) {
 			expiry: expiry
 		}
 	});
+
+	if (created === null) throw error(500, { message: 'Failed to create item' });
 
 	return json(created);
 }

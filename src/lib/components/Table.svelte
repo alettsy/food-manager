@@ -14,7 +14,7 @@
     }
 
     function formatExpiryColor(data: any): string {
-        if (data.expiry === null) return "after:bg-neutral";
+        if (data.expiry === null || typeof(data.expiry) === 'number') return "after:bg-neutral";
 
         if (new Date(data.expiry) < new Date()) {
             return "after:bg-error"
@@ -44,16 +44,10 @@
     }
 
     function remove(item: any) {
-        const text = "Delete " + item.name + "?";
-        if (confirm(text)) {
-            fetch('/api/' + type + '/delete', {
-                method: 'POST',
-                body: JSON.stringify({id: item.id})
-            });
-
-            toaster.success('Deleted ' + item.name);
-            dispatch('refresh');
-        }
+        dispatch('delete', {
+            item,
+            type
+        });
     }
 
     function headerClicked(header: any) {
@@ -73,7 +67,7 @@
     }
 </script>
 
-<div class="main-table overflow-x-auto overflow-y-scroll">
+<div class="overflow-x-auto overflow-y-scroll max-h-[100%]">
     <table class="table border-separate border-spacing-y-1">
         <thead>
         <tr>
@@ -130,9 +124,3 @@
         </tbody>
     </table>
 </div>
-
-<style>
-    .main-table {
-        height: calc(100% - 64px);
-    }
-</style>

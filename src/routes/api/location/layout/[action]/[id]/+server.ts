@@ -26,28 +26,24 @@ export async function GET(event: any) {
 	const action = event.params.action;
 	const stringId = event.params.id;
 
-	if (action !== 'edit') return json({ error: 'action unknown' });
+	if (action !== 'edit') throw error(400, { message: 'Unknown action' });
 
-	try {
-		const id = parseInt(stringId);
+	const id = parseInt(stringId);
 
-		const result: any = await db.item.findFirst({
-			where: {
-				id: id
-			}
-		});
+	if (isNaN(id)) throw error(400, { message: 'Invalid ID' });
 
-		if (result === null) return json({ error: 'item not found' });
-
-		let updatedLayout = layout;
-		for (let child of updatedLayout.children) {
-			child.value = result[child.type];
+	const result: any = await db.location.findFirst({
+		where: {
+			id: id
 		}
+	});
 
-		console.log(updatedLayout);
+	if (result === null) throw error(500, { message: 'Location not found' });
 
-		return json(updatedLayout);
-	} catch {
-		throw error(404, 'Not Found');
+	let updatedLayout = layout;
+	for (let child of updatedLayout.children) {
+		child.value = result[child.type];
 	}
+
+	return json(updatedLayout);
 }

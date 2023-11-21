@@ -6,20 +6,21 @@ export async function GET(event: any) {
 	if (method === 'all') {
 		return json(expiryOptions);
 	} else {
-		try {
-			const id = parseInt(method);
-			const result = expiryOptions.filter((o) => {
-				return o.id === id;
-			});
+		const id = parseInt(method);
 
-			if (result.length === 1) {
-				return json(result[0]);
-			}
+		if (isNaN(id)) throw error(400, { message: 'Invalid ID' });
 
-			return json(result);
-		} catch {
-			throw error(404, 'Not Found');
+		const result = expiryOptions.filter((o) => {
+			return o.id === id;
+		});
+
+		if (result === undefined) throw error(500, { message: 'Expiry not found' });
+
+		if (result.length === 1) {
+			return json(result[0]);
 		}
+
+		return json(result);
 	}
 }
 

@@ -6,21 +6,22 @@ export async function GET(event: any) {
 
 	if (method === 'all') {
 		const locations = await db.location.findMany();
+		if (locations === null) throw error(500, { message: 'Failed to load locations' });
 		return json(locations);
 	} else {
-		try {
-			const id = parseInt(method);
+		const id = parseInt(method);
 
-			const result = await db.location.findFirst({
-				where: {
-					id: id
-				}
-			});
+		if (isNaN(id)) throw error(400, { message: 'Invalid ID' });
 
-			return json(result);
-		} catch {
-			throw error(404, 'Not Found');
-		}
+		const result = await db.location.findFirst({
+			where: {
+				id: id
+			}
+		});
+
+		if (result === null) throw error(500, { message: 'Location not found' });
+
+		return json(result);
 	}
 }
 
@@ -32,11 +33,11 @@ export async function POST(event: any) {
 		case 'new':
 			return newLocation(options);
 		case 'edit':
-			return updateLocation(options.id, options.properties);
+			return updateLocation(options.id, options);
 		case 'delete':
 			return deleteLocation(options.id);
 		default:
-			throw error(404, 'Not Found');
+			throw error(404, 'Unknown method');
 	}
 }
 
@@ -44,6 +45,8 @@ async function newLocation(loc: any) {
 	const created = await db.location.create({
 		data: loc
 	});
+
+	if (created === null) throw error(500, { message: 'Failed to create location' });
 
 	return json(created);
 }
@@ -56,6 +59,8 @@ async function updateLocation(id: number, properties: any) {
 		data: properties
 	});
 
+	if (updated === null) throw error(500, { message: 'Failed to update location' });
+
 	return json(updated);
 }
 
@@ -65,6 +70,8 @@ async function deleteLocation(id: number) {
 			id: id
 		}
 	});
+
+	if (deleted === null) throw error(500, { message: 'Failed to delete location' });
 
 	return json(deleted);
 }

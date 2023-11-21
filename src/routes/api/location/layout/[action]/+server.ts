@@ -24,11 +24,7 @@ const layout = {
 export async function GET(event: any) {
 	const action = event.params.action;
 
-	if (action !== 'new') return json({ error: 'action unknown' });
+	if (action !== 'new') throw error(400, { message: 'Unknown action' });
 
-	try {
-		return json(layout);
-	} catch {
-		throw error(404, 'Not Found');
-	}
+	return json(layout);
 }

@@ -3,6 +3,7 @@
     import Filter from "$lib/components/Filter.svelte";
     import {filters} from "$lib/store";
     import {createEventDispatcher} from "svelte";
+    import HomeButton from "$lib/components/HomeButton.svelte";
 
     type Control = {
         type: string;
@@ -39,16 +40,32 @@
 <div class="control-bar flex flex-row m-2 items-center justify-left space-x-1">
     {#each controls as control}
         {#if control.type === 'text-input'}
-            <input type="text" class={"input input-bordered input-primary w-[20em] " + control.css}
+            <input type="text" class={"input input-bordered input-primary w-[20em] min-w-[9em] " + control.css}
                    placeholder="Type to search" on:input={searchUpdated}/>
         {:else if control.type === 'menu-button'}
             <MenuButton title={control.name ?? ''} children={control.children ?? []}/>
+            {:else if control.type === 'home-button'}
+<HomeButton />
         {:else if control.type === 'dropdown-loader'}
             <Filter name={control.name ?? ''} on:change={dropdownChange} route={control.route ?? ''}
                     selected={getSelected(control.name ?? '')}/>
         {/if}
     {/each}
 </div>
+
+<style>
+    .control-bar {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    @media only screen and (min-width: 798px) {
+        .control-bar {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+        }
+    }
+</style>
 
 
 
