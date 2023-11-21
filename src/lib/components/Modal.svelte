@@ -22,7 +22,7 @@
     }
 
     function dropdownChanged(payload: any, child: any) {
-        child.value = payload.detail.newValue;
+        child.value = payload.detail.data.newValue;
     }
 
     function textChanged(event: any, child: any) {
