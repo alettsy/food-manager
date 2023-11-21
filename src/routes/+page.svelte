@@ -135,9 +135,7 @@
     .main {
         visibility: hidden;
         height: calc(100% - 64px);
-        margin-left: 0.25rem;
-        margin-right: 0.25rem;
-        margin-top: 0.25rem;
+        margin: 0.25rem;
     }
 
     @media only screen and (min-width: 480px) and (max-width: 798px) {
@@ -149,9 +147,7 @@
     @media only screen and (min-width: 798px) {
         .main {
             visibility: visible;
-            margin-left: 1.25rem;
-            margin-right: 1.25rem;
-            margin-top: 1.25rem;
+            margin: 1.25rem;
         }
     }
 </style>

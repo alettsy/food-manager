@@ -94,18 +94,20 @@
 <style>
     .main {
         visibility: hidden;
-        height: 100%;
-        margin-left: 0.25rem;
-        margin-right: 0.25rem;
-        margin-top: 0.25rem;
+        height: calc(100% - 64px);
+        margin: 0.25rem;
     }
 
-    @media only screen and (min-width: 480px) {
+    @media only screen and (min-width: 480px) and (max-width: 798px) {
         .main {
             visibility: visible;
-            margin-left: 1.25rem;
-            margin-right: 1.25rem;
-            margin-top: 1.25rem;
+        }
+    }
+
+    @media only screen and (min-width: 798px) {
+        .main {
+            visibility: visible;
+            margin: 1.25rem;
         }
     }
 </style>

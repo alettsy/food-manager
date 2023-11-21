@@ -67,7 +67,7 @@
     }
 </script>
 
-<div class="overflow-x-auto overflow-y-scroll max-h-[100%]">
+<div class="tables overflow-x-auto overflow-y-scroll">
     <table class="table border-separate border-spacing-y-1">
         <thead>
         <tr>
@@ -124,3 +124,15 @@
         </tbody>
     </table>
 </div>
+
+<style>
+    .tables {
+        max-height: 100%;
+    }
+
+    @media only screen and (min-width: 798px) {
+        .tables {
+            max-height: 98%;
+        }
+    }
+</style>
