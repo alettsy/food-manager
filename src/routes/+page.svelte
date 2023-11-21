@@ -5,6 +5,8 @@
     import { onMount } from 'svelte';
     import ActionButton from '$lib/components/ActionButton.svelte';
     import Modal from '$lib/components/Modal.svelte';
+    import toaster from "$lib/toaster";
+    import Confirm from "$lib/components/Confirm.svelte";
 
     export let data;
 
@@ -23,6 +25,13 @@
 
     $: filterStore = $filters;
     let items: any = new Promise((r: any, _) => setTimeout(r([]), 5000));
+
+    let showConfirm = false;
+    let confirmSettings = {
+        message: '',
+        successMessage: '',
+        actionFunction: () => {}
+    };
 
     onMount(() => {
         const interval = setInterval(getItems, 3000);
@@ -83,11 +92,30 @@
         getItems();
     }
 
+    function remove(payload: any) {
+        const item = payload.detail.item;
+
+        confirmSettings = {
+            message: 'Delete ' + item.name + '?',
+            successMessage: 'Deleted ' + item.name,
+            actionFunction: async () => {
+                return await fetch('/api/item/delete', {
+                    method: 'POST',
+                    body: JSON.stringify({id: item.id})
+                });
+            }
+        };
+
+        showConfirm = true;
+    }
+
     // TODO: on phones, display list of item names and search bar, nothing else.
 
 </script>
 
 <div class='main mx-5 text-center'>
+    <Confirm bind:showModal={showConfirm} actionFunction={confirmSettings.actionFunction}
+             successMessage={confirmSettings.successMessage} message={confirmSettings.message} />
     <Modal {action} bind:showModal {id} {type} on:close={refresh} />
     <ActionButton on:action={newAction} options={data.actions} />
     <ControlBar controls={data.controls} on:searchChanged={updateSearch} />
@@ -98,7 +126,7 @@
             <p>No items</p>
         {:else}
             <Table sortBy={filterOptions.sort.property} order={filterOptions.sort.order} type='item'
-                   headers={data.headers} items={json} on:itemClicked={editItem} on:orderChanged={updateOrder} on:refresh={refresh} />
+                   headers={data.headers} items={json} on:itemClicked={editItem} on:orderChanged={updateOrder} on:refresh={refresh} on:delete={remove} />
         {/if}
     {/await}
 </div>
@@ -106,12 +134,24 @@
 <style>
     .main {
         visibility: hidden;
-        height: 100%;
+        height: calc(100% - 64px);
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        margin-top: 0.25rem;
     }
 
-    @media only screen and (min-width: 480px) {
+    @media only screen and (min-width: 480px) and (max-width: 798px) {
         .main {
             visibility: visible;
+        }
+    }
+
+    @media only screen and (min-width: 798px) {
+        .main {
+            visibility: visible;
+            margin-left: 1.25rem;
+            margin-right: 1.25rem;
+            margin-top: 1.25rem;
         }
     }
 </style>

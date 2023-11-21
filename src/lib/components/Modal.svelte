@@ -18,9 +18,7 @@
         let path = '/api/' + type + '/layout/' + action + (id === null ? '' : '/' + id);
         dialog.showModal()
         const r = await fetch(path);
-        const x = await r.json();
-        console.log(x);
-        return x;
+        return await r.json();
     }
 
     function dropdownChanged(payload: any, child: any) {
@@ -54,10 +52,16 @@
             const response = await fetch('/api/' + type + '/' + action, {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            })
-            const j = response.json();
-            let text = action === 'new' ? ' was added' : ' was updated';
-            toaster.success(type + text);
+            });
+
+            if (response.ok) {
+                let text = action === 'new' ? ' was added' : ' was updated';
+                toaster.success(payload['name'] + text);
+            } else {
+                const json: any = await response.json();
+                toaster.error(json.message);
+            }
+
             requesting = false;
             dispatch('close');
             dialog.close();
@@ -72,7 +76,7 @@
         </form>
         {#if showModal}
             {#await items}
-                <p>Loading...</p>
+                <span class='loading loading-spinner loading-lg text-primary'></span>
             {:then json}
                 <h2 class="font-bold text-lg">{json.title}</h2>
                 <div class="flex flex-col space-y-1">
