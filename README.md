@@ -2,7 +2,10 @@
 
 ## About
 
-`TODO: fill in this section`
+I created this tool for my parents so they can keep track of all the food stuffs they have in their house as they always seemed to forget what they have and ended up buying lots of extra things. The idea was to have a self-hosted website they could access at any point from their tablets or computers to check for anything that's about to expire or if they need to buy anything extra.<br/><br/>
+The whole UI was designed to be simple to use and clean, and accessible on large screens, as well as tablets. I have not implemented a proper view for mobile as this wasn't a requirement they needed, but I welcome any pull requests to add this.<br/>
+<br/>
+This project is built using SvelteKit and Prisma (using Sqlite). 
 
 ## Setup
 
