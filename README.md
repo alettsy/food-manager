@@ -9,12 +9,18 @@ This project is built using SvelteKit and Prisma (using Sqlite).
 
 ## Setup
 
+Run `npm i` first
+
 To initialize the database, run:
 `npm run init-db`
 
 To view a development preview, run `npm run dev`
 
 To build a production deployment, run `npm run build`
+
+## Screenshots
+
+<img src="assets/food_manager.png" alt="Food Manager" style="max-width:750px" />
 
 ## Deploying to Pi
 
